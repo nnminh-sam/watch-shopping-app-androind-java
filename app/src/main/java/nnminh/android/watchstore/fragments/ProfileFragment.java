@@ -203,6 +203,8 @@ public class ProfileFragment extends Fragment {
     }
 
     private void loadProfileAndOrders() {
+        if (!isAdded()) return; // Check if fragment is attached to activity
+
         showLoading(true);
         textError.setVisibility(View.GONE);
         String token = TokenManager.getInstance(getContext()).getToken();
@@ -212,6 +214,8 @@ public class ProfileFragment extends Fragment {
         apiService.getUserProfile(token).enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
+                if (!isAdded()) return; // Check if fragment is still attached
+
                 if (response.isSuccessful() && response.body() != null) {
                     user = response.body().getUser();
                     bindUserProfile(user);
@@ -223,6 +227,7 @@ public class ProfileFragment extends Fragment {
             }
             @Override
             public void onFailure(Call<UserResponse> call, Throwable t) {
+                if (!isAdded()) return; // Check if fragment is still attached
                 showLoading(false);
                 showError("Failed to load profile.");
             }
@@ -230,6 +235,8 @@ public class ProfileFragment extends Fragment {
     }
 
     private void loadOrders() {
+        if (!isAdded()) return; // Check if fragment is attached to activity
+
         String token = TokenManager.getInstance(getContext()).getToken();
         User currentUser = TokenManager.getInstance(getContext()).getUser();
         
@@ -246,6 +253,8 @@ public class ProfileFragment extends Fragment {
         apiService.getOrders(token, queryParams).enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<OrderResponse> call, Response<OrderResponse> response) {
+                if (!isAdded()) return; // Check if fragment is still attached
+
                 showLoading(false);
                 if (response.isSuccessful() && response.body() != null && response.body().getOrders() != null) {
                     orderList = response.body().getOrders();
@@ -257,6 +266,7 @@ public class ProfileFragment extends Fragment {
             }
             @Override
             public void onFailure(Call<OrderResponse> call, Throwable t) {
+                if (!isAdded()) return; // Check if fragment is still attached
                 showLoading(false);
                 ordersSection.setVisibility(View.GONE);
             }
@@ -264,47 +274,36 @@ public class ProfileFragment extends Fragment {
     }
 
     private void bindUserProfile(UserProfile user) {
+        if (!isAdded()) return; // Check if fragment is attached to activity
+
         if (user.getAvatar() != null && !user.getAvatar().isEmpty()) {
             Glide.with(requireActivity())
                     .load(user.getAvatar())
                     .placeholder(R.drawable.ic_avatar_placeholder)
                     .error(R.drawable.ic_avatar_placeholder)
-                    .circleCrop()
                     .into(imageAvatar);
-        } else {
-            imageAvatar.setImageResource(R.drawable.ic_avatar_placeholder);
         }
 
         textEmail.setText(user.getEmail());
         editFirstName.setText(user.getfirst_name());
         editLastName.setText(user.getlast_name());
         editPhone.setText(user.getphone_number());
-
-        // Set date of birth
-        if (user.getDate_of_birth() != null) {
-            try {
-                SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-                SimpleDateFormat outputFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-                Date date = user.getDate_of_birth();
-                if (date != null) {
-                    editDob.setText(outputFormat.format(date));
-                    dobCalendar.setTime(date);
-                }
-            } catch (Exception e) {
-                editDob.setText(user.getDate_of_birth().toString());
-            }
-        }
-
+        
         // Set gender
-        if (user.getGender() != null) {
-            String gender = user.getGender();
-            int position = 0; // Default to Male
-            if (gender.equals("FEMALE")) {
+        String gender = user.getGender();
+        if (gender != null) {
+            int position = 0; // Default to "Male"
+            if (gender.equalsIgnoreCase("FEMALE")) {
                 position = 1;
-            } else if (gender.equals("OTHER")) {
+            } else if (gender.equalsIgnoreCase("OTHER")) {
                 position = 2;
             }
             spinnerGender.setSelection(position);
+        }
+
+        // Set date of birth
+        if (user.getDate_of_birth() != null) {
+            editDob.setText(user.getDate_of_birth().toString());
         }
     }
 
@@ -322,12 +321,14 @@ public class ProfileFragment extends Fragment {
     }
 
     private void showLoading(boolean loading) {
+        if (!isAdded()) return; // Check if fragment is attached to activity
         progressBar.setVisibility(loading ? View.VISIBLE : View.GONE);
     }
 
     private void showError(String msg) {
-        textError.setVisibility(View.VISIBLE);
+        if (!isAdded()) return; // Check if fragment is attached to activity
         textError.setText(msg);
+        textError.setVisibility(View.VISIBLE);
     }
 
     private void saveProfile() {

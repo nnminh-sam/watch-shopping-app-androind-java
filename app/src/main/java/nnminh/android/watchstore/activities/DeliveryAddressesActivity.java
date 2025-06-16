@@ -1,5 +1,6 @@
 package nnminh.android.watchstore.activities;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,14 +14,18 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.textfield.TextInputEditText;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import nnminh.android.watchstore.R;
 import nnminh.android.watchstore.adapters.DeliveryAddressAdapter;
 import nnminh.android.watchstore.auth.TokenManager;
+import nnminh.android.watchstore.models.CreateDeliveryInformationRequest;
 import nnminh.android.watchstore.models.DeliveryInformation;
 import nnminh.android.watchstore.models.DeliveryInformationListResponse;
+import nnminh.android.watchstore.models.DeliveryInformationResponse;
 import nnminh.android.watchstore.network.ApiClient;
 import nnminh.android.watchstore.network.ApiService;
 import retrofit2.Call;
@@ -58,13 +63,87 @@ public class DeliveryAddressesActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
         // Setup click listeners
-        buttonAddAddress.setOnClickListener(v -> {
-            // TODO: Implement add new address functionality
-            Toast.makeText(this, "Add new address feature coming soon!", Toast.LENGTH_SHORT).show();
-        });
+        buttonAddAddress.setOnClickListener(v -> showAddAddressDialog());
 
         // Load addresses
         loadAddresses();
+    }
+
+    private void showAddAddressDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_add_address, null);
+        builder.setView(dialogView);
+
+        TextInputEditText editTextFullName = dialogView.findViewById(R.id.editTextFullName);
+        TextInputEditText editTextPhone = dialogView.findViewById(R.id.editTextPhone);
+        TextInputEditText editTextCity = dialogView.findViewById(R.id.editTextCity);
+        TextInputEditText editTextDistrict = dialogView.findViewById(R.id.editTextDistrict);
+        TextInputEditText editTextStreet = dialogView.findViewById(R.id.editTextStreet);
+        TextInputEditText editTextSpecificAddress = dialogView.findViewById(R.id.editTextSpecificAddress);
+
+        builder.setTitle("Add New Address")
+                .setPositiveButton("Add", (dialog, which) -> {
+                    String fullName = editTextFullName.getText().toString().trim();
+                    String phone = editTextPhone.getText().toString().trim();
+                    String city = editTextCity.getText().toString().trim();
+                    String district = editTextDistrict.getText().toString().trim();
+                    String street = editTextStreet.getText().toString().trim();
+                    String specificAddress = editTextSpecificAddress.getText().toString().trim();
+
+                    if (validateAddressInput(fullName, phone, city, district, street, specificAddress)) {
+                        createNewAddress(fullName, phone, city, district, street, specificAddress);
+                    }
+                })
+                .setNegativeButton("Cancel", null);
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private boolean validateAddressInput(String fullName, String phone, String city, 
+                                       String district, String street, String specificAddress) {
+        if (fullName.isEmpty() || phone.isEmpty() || city.isEmpty() || 
+            district.isEmpty() || street.isEmpty() || specificAddress.isEmpty()) {
+            Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
+    private void createNewAddress(String fullName, String phone, String city, 
+                                String district, String street, String specificAddress) {
+        showLoading(true);
+        String token = TokenManager.getInstance(this).getToken();
+        ApiService apiService = ApiClient.getClient(this).create(ApiService.class);
+
+        CreateDeliveryInformationRequest request = new CreateDeliveryInformationRequest(
+            fullName,
+            phone,
+            city,
+            district,
+            street,
+            specificAddress,
+            false
+        );
+
+        apiService.createDeliveryAddress(token, request).enqueue(new Callback<DeliveryInformationResponse>() {
+            @Override
+            public void onResponse(Call<DeliveryInformationResponse> call, Response<DeliveryInformationResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    Toast.makeText(DeliveryAddressesActivity.this, "Address added successfully", Toast.LENGTH_SHORT).show();
+                    loadAddresses(); // Reload the addresses list
+                } else {
+                    showLoading(false);
+                    Toast.makeText(DeliveryAddressesActivity.this, "Failed to add address", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DeliveryInformationResponse> call, Throwable t) {
+                showLoading(false);
+                Toast.makeText(DeliveryAddressesActivity.this, "Network error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override

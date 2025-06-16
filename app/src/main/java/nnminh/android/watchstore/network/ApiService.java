@@ -31,7 +31,10 @@ public interface ApiService {
     );
 
     @POST("users/delivery-addresses")
-    Call<DeliveryInformationResponse> createDeliveryAddress(CreateDeliveryInformationRequest request);
+    Call<DeliveryInformationResponse> createDeliveryAddress(
+        @Header("Authorization") String token,
+        @Body CreateDeliveryInformationRequest request
+    );
 
     @GET("users/delivery-addresses")
     Call<DeliveryInformationListResponse> getDeliveryAddresses(@Header("Authorization") String token);
