@@ -127,7 +127,7 @@ public class CheckoutActivity extends AppCompatActivity {
     private void populateAddressRadioGroup() {
         radioGroupAddresses.removeAllViews();
         for (DeliveryInformation address : deliveryAddresses) {
-            View addressView = getLayoutInflater().inflate(R.layout.item_delivery_address, radioGroupAddresses, false);
+            View addressView = getLayoutInflater().inflate(R.layout.item_delivery_address_checkout, radioGroupAddresses, false);
             
             RadioButton radioButton = addressView.findViewById(R.id.radioButton);
             TextView textFullName = addressView.findViewById(R.id.textFullName);

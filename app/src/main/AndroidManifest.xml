@@ -30,6 +30,7 @@
         <activity android:name=".activities.ChangePasswordActivity"/>
         <activity android:name=".activities.OrderDetailActivity"/>
         <activity android:name=".activities.CheckoutActivity"/>
+        <activity android:name=".activities.DeliveryAddressesActivity" />
     </application>
 
 </manifest>

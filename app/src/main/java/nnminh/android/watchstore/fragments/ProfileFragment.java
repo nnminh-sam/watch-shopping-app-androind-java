@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide;
 import nnminh.android.watchstore.R;
 import nnminh.android.watchstore.activities.ChangePasswordActivity;
 import nnminh.android.watchstore.activities.OrderDetailActivity;
+import nnminh.android.watchstore.activities.DeliveryAddressesActivity;
 import nnminh.android.watchstore.adapters.OrderAdapter;
 import nnminh.android.watchstore.models.*;
 import nnminh.android.watchstore.network.ApiClient;
@@ -39,7 +40,7 @@ public class ProfileFragment extends Fragment {
     private Uri selectedImageUri;
 
     private ImageView imageAvatar;
-    private Button buttonChangePassword, buttonSave;
+    private Button buttonChangePassword, buttonSave, buttonDeliveryAddresses;
     private TextView textEmail, textError, textOrdersTitle;
     private EditText editFirstName, editLastName, editPhone, editDob;
     private Spinner spinnerGender;
@@ -65,6 +66,7 @@ public class ProfileFragment extends Fragment {
 
         imageAvatar = view.findViewById(R.id.imageAvatar);
         buttonChangePassword = view.findViewById(R.id.buttonChangePassword);
+        buttonDeliveryAddresses = view.findViewById(R.id.buttonDeliveryAddresses);
         buttonSave = view.findViewById(R.id.buttonSave);
         textEmail = view.findViewById(R.id.textEmail);
         editFirstName = view.findViewById(R.id.editFirstName);
@@ -114,6 +116,10 @@ public class ProfileFragment extends Fragment {
             startActivity(intent);
         });
         recyclerViewOrders.setAdapter(orderAdapter);
+
+        buttonDeliveryAddresses.setOnClickListener(v -> {
+            startActivity(new Intent(getContext(), DeliveryAddressesActivity.class));
+        });
 
         buttonChangePassword.setOnClickListener(v -> {
             startActivity(new Intent(getContext(), ChangePasswordActivity.class));
