@@ -23,6 +23,7 @@ import nnminh.android.watchstore.models.CartResponse;
 import nnminh.android.watchstore.models.CreateCartItemRequest;
 import nnminh.android.watchstore.models.Product;
 import nnminh.android.watchstore.models.ProductDetailResponse;
+import nnminh.android.watchstore.models.Spec;
 import nnminh.android.watchstore.network.ApiClient;
 import nnminh.android.watchstore.network.ApiService;
 import nnminh.android.watchstore.utils.CartBadgeHelper;
@@ -176,6 +177,54 @@ public class ProductDetailActivity extends AppCompatActivity {
         }
 
         textDesc.setText(p.getDescription() != null ? p.getDescription() : "No description.");
+
+        // Display specifications
+        LinearLayout layoutSpecs = findViewById(R.id.layoutSpecs);
+        layoutSpecs.removeAllViews();
+        
+        if (p.getSpecs() != null && !p.getSpecs().isEmpty()) {
+            for (Spec spec : p.getSpecs()) {
+                LinearLayout specRow = new LinearLayout(this);
+                specRow.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                ));
+                specRow.setOrientation(LinearLayout.HORIZONTAL);
+                specRow.setPadding(0, 0, 0, 16);
+
+                // Spec name
+                TextView specName = new TextView(this);
+                specName.setLayoutParams(new LinearLayout.LayoutParams(
+                    200,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                ));
+                specName.setText(spec.getKey());
+                specName.setTextColor(getResources().getColor(R.color.colorTextSecondary));
+                specRow.addView(specName);
+
+                // Spec value
+                TextView specValue = new TextView(this);
+                LinearLayout.LayoutParams valueParams = new LinearLayout.LayoutParams(
+                    0,
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    1.0f
+                );
+                specValue.setLayoutParams(valueParams);
+                specValue.setText(spec.getValue());
+                specRow.addView(specValue);
+
+                layoutSpecs.addView(specRow);
+            }
+        } else {
+            TextView noSpecs = new TextView(this);
+            noSpecs.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ));
+            noSpecs.setText("No specifications available.");
+            noSpecs.setTextColor(getResources().getColor(R.color.colorTextSecondary));
+            layoutSpecs.addView(noSpecs);
+        }
 
         imagesAdapter.setImages(p.getAssets() != null ? p.getAssets() : new ArrayList<>());
     }
