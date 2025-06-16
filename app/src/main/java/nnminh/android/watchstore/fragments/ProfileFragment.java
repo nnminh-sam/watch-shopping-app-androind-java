@@ -249,7 +249,9 @@ public class ProfileFragment extends Fragment {
         ApiService apiService = ApiClient.getClient(requireContext()).create(ApiService.class);
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("user_id", currentUser.getId());
-        
+        queryParams.put("sort_by", "created_at");
+        queryParams.put("order_by", "asc");
+
         apiService.getOrders(token, queryParams).enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<OrderResponse> call, Response<OrderResponse> response) {
