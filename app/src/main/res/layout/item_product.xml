@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    card_view:cardCornerRadius="16dp"
+    card_view:cardElevation="6dp"
+    android:layout_margin="8dp">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="12dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal">
+
+        <!-- Image with badge overlay -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp">
+
+            <ImageView
+                android:id="@+id/imageProduct"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_watch_placeholder"
+                android:contentDescription="Product image" />
+
+            <TextView
+                android:id="@+id/textAvailability"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:layout_gravity="top|end"
+                android:background="@drawable/bg_availability_badge"
+                android:text="In stock"
+                android:textStyle="bold"
+                android:textSize="10sp"
+                android:textColor="@android:color/white"
+                android:layout_margin="2dp"/>
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/textName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Watch Name"
+            android:textStyle="bold"
+            android:textSize="12sp"
+            android:layout_marginTop="8dp"
+            android:lineSpacingExtra="2dp"/>
+
+        <TextView
+            android:id="@+id/textBrand"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Brand"
+            android:textSize="12sp"
+            android:textColor="@color/colorTextSecondary"
+            android:layout_marginTop="2dp" />
+
+        <TextView
+            android:id="@+id/textCategories"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Categories"
+            android:textSize="10sp"
+            android:textColor="@color/colorSecondary"
+            android:layout_marginTop="2dp" />
+
+        <!-- Price and Sold Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/textPrice"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="$299.99"
+                android:textStyle="bold"
+                android:textSize="12sp"
+                android:textColor="@color/colorAccent"
+                android:layout_weight="1"
+                android:gravity="start"/>
+
+            <TextView
+                android:id="@+id/textSold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sold: 0"
+                android:textSize="11sp"
+                android:textColor="@color/colorTextSecondary"
+                android:gravity="end"/>
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

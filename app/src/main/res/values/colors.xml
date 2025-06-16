@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <!-- Main App Colors -->
+    <color name="colorAccent">#C2882B</color>          <!-- Gold Accent -->
+    <color name="colorPrimary">#181818</color>         <!-- Jet Black -->
+    <color name="colorBackground">#FFFFFF</color>      <!-- White -->
+    <color name="colorSurface">#232323</color>         <!-- Deep Charcoal -->
+    <color name="colorBorder">#D7D7D7</color>          <!-- Silver Grey -->
+    <color name="colorSecondary">#223153</color>       <!-- Rich Navy -->
+
+    <!-- State/Feedback Colors -->
+    <color name="colorError">#D7263D</color>           <!-- Error Red -->
+    <color name="colorSuccess">#35A07A</color>         <!-- Success Green -->
+    <color name="colorInfo">#3A7CA5</color>            <!-- Info Blue -->
+
+    <!-- Utility/Supporting Colors -->
+    <color name="colorGoldMuted">#B89B63</color>       <!-- Muted Gold -->
+    <color name="colorTextPrimary">#111111</color>     <!-- Text Black -->
+    <color name="colorTextSecondary">#7B7B7B</color>   <!-- Text Grey -->
+</resources>
