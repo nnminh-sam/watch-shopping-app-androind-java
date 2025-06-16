@@ -37,6 +37,7 @@ import java.util.*;
 
 public class ProfileFragment extends Fragment {
     private static final int REQUEST_PICK_IMAGE = 1001;
+    private static final int REQUEST_ORDER_DETAIL = 1002;
     private Uri selectedImageUri;
 
     private ImageView imageAvatar;
@@ -111,9 +112,7 @@ public class ProfileFragment extends Fragment {
 //        orderAdapter = new OrderAdapter(orderList);
 //        recyclerViewOrders.setAdapter(orderAdapter);
         orderAdapter = new OrderAdapter(orderList, order -> {
-            Intent intent = new Intent(getContext(), OrderDetailActivity.class);
-            intent.putExtra("order_id", order.getId());
-            startActivity(intent);
+            showOrderDetail(order.getId());
         });
         recyclerViewOrders.setAdapter(orderAdapter);
 
@@ -135,12 +134,15 @@ public class ProfileFragment extends Fragment {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_PICK_IMAGE && resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
             selectedImageUri = data.getData();
             imageAvatar.setImageURI(selectedImageUri);
             uploadAvatar(selectedImageUri);
+        } else if (requestCode == REQUEST_ORDER_DETAIL && resultCode == Activity.RESULT_OK) {
+            // Order was cancelled, refresh the orders list
+            loadOrders();
         }
     }
 
@@ -364,5 +366,11 @@ public class ProfileFragment extends Fragment {
                 showError("Failed to save profile.");
             }
         });
+    }
+
+    private void showOrderDetail(String orderId) {
+        Intent intent = new Intent(getActivity(), OrderDetailActivity.class);
+        intent.putExtra("order_id", orderId);
+        startActivityForResult(intent, REQUEST_ORDER_DETAIL);
     }
 }

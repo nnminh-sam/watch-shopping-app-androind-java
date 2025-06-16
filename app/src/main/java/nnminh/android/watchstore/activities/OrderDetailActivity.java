@@ -112,7 +112,8 @@ public class OrderDetailActivity extends AppCompatActivity {
             public void onResponse(Call<SingleOrderResponse> call, Response<SingleOrderResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     Toast.makeText(OrderDetailActivity.this, "Order cancelled successfully", Toast.LENGTH_SHORT).show();
-                    loadOrderDetails(); // Reload order details
+                    setResult(RESULT_OK); // Set result to indicate successful cancellation
+                    finish(); // Close the activity and return to profile fragment
                 } else {
                     showLoading(false);
                     Toast.makeText(OrderDetailActivity.this, "Failed to cancel order", Toast.LENGTH_SHORT).show();
