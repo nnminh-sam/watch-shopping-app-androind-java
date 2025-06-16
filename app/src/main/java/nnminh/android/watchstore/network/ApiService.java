@@ -81,6 +81,13 @@ public interface ApiService {
     @POST("orders")
     Call<SingleOrderResponse> placeOrder(@Header("Authorization") String token, @Body CreateOrderRequest request);
 
+    @PATCH("orders/{id}")
+    Call<SingleOrderResponse> updateOrderStatus(
+        @Header("Authorization") String token,
+        @Path("id") String orderId,
+        @Query("status") String status
+    );
+
 
     // ──────── Categories & Brands ────────
 
