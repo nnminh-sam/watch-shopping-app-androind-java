@@ -1,5 +1,6 @@
 package nnminh.android.watchstore.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -22,6 +23,7 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
 
+import nnminh.android.watchstore.MainActivity;
 import nnminh.android.watchstore.R;
 import nnminh.android.watchstore.adapters.CheckoutProductAdapter;
 import nnminh.android.watchstore.auth.TokenManager;
@@ -256,7 +258,16 @@ public class CheckoutActivity extends AppCompatActivity {
             public void onResponse(Call<SingleOrderResponse> call, Response<SingleOrderResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     Toast.makeText(CheckoutActivity.this, "Order placed successfully", Toast.LENGTH_SHORT).show();
+                    
+                    // Set result and finish activity
+                    setResult(RESULT_OK);
                     finish();
+                    
+                    // Navigate to home fragment
+                    Intent intent = new Intent(CheckoutActivity.this, MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putExtra("navigateToHome", true);
+                    startActivity(intent);
                 } else {
                     String errorMessage = "Failed to place order";
                     if (response.errorBody() != null) {
